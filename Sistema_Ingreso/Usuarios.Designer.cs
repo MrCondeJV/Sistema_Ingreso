@@ -54,9 +54,12 @@
             this.txtMarca = new System.Windows.Forms.TextBox();
             this.txtModelo = new System.Windows.Forms.TextBox();
             this.txtPlaca = new System.Windows.Forms.TextBox();
+            this.btnGenerrarBarra = new System.Windows.Forms.Button();
+            this.pictureBoxBarcode = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBarcode)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -245,6 +248,8 @@
             // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.pictureBoxBarcode);
+            this.panel3.Controls.Add(this.btnGenerrarBarra);
             this.panel3.Controls.Add(this.txtUnidad);
             this.panel3.Controls.Add(this.txtGrado);
             this.panel3.Controls.Add(this.txtApellido);
@@ -338,6 +343,24 @@
             this.txtPlaca.Size = new System.Drawing.Size(176, 29);
             this.txtPlaca.TabIndex = 14;
             // 
+            // btnGenerrarBarra
+            // 
+            this.btnGenerrarBarra.Location = new System.Drawing.Point(859, 281);
+            this.btnGenerrarBarra.Name = "btnGenerrarBarra";
+            this.btnGenerrarBarra.Size = new System.Drawing.Size(75, 23);
+            this.btnGenerrarBarra.TabIndex = 12;
+            this.btnGenerrarBarra.Text = "Generar Codigo";
+            this.btnGenerrarBarra.UseVisualStyleBackColor = true;
+            this.btnGenerrarBarra.Click += new System.EventHandler(this.btnGenerrarBarra_Click);
+            // 
+            // pictureBoxBarcode
+            // 
+            this.pictureBoxBarcode.Location = new System.Drawing.Point(531, 254);
+            this.pictureBoxBarcode.Name = "pictureBoxBarcode";
+            this.pictureBoxBarcode.Size = new System.Drawing.Size(299, 50);
+            this.pictureBoxBarcode.TabIndex = 13;
+            this.pictureBoxBarcode.TabStop = false;
+            // 
             // Usuarios
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -350,6 +373,7 @@
             this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBarcode)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -382,5 +406,7 @@
         private System.Windows.Forms.TextBox txtPlaca;
         private System.Windows.Forms.TextBox txtModelo;
         private System.Windows.Forms.TextBox txtMarca;
+        private System.Windows.Forms.Button btnGenerrarBarra;
+        private System.Windows.Forms.PictureBox pictureBoxBarcode;
     }
 }
