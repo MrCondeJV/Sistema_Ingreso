@@ -38,7 +38,7 @@ namespace Sistema_Ingreso
 
         private void btnUsuarios_Click(object sender, EventArgs e)
         {
-            AbrirFormulario(new Usuarios());
+            AbrirFormulario(new UsuariosView());
         }
 
         private void button2_Click(object sender, EventArgs e)
