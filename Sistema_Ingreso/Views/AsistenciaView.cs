@@ -15,12 +15,12 @@ namespace Sistema_Ingreso
     using System.IO;
     using System.Timers; // Importar la librería de Timers
 
-    public partial class Asistencia : UserControl
+    public partial class AsistenciaView : UserControl
     {
         private Conexion conexion;
         private System.Timers.Timer timer; // Añadimos un timer para el borrado automático
 
-        public Asistencia()
+        public AsistenciaView()
         {
             InitializeComponent();
             conexion = new Conexion();

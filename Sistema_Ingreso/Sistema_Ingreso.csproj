@@ -113,11 +113,11 @@
     <Compile Include="Models\Conexion.cs" />
     <Compile Include="Models\ModoIngreso.cs" />
     <Compile Include="Models\Vehiculo.cs" />
-    <Compile Include="Views\Asistencia.cs">
+    <Compile Include="Views\AsistenciaView.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Asistencia.Designer.cs">
-      <DependentUpon>Asistencia.cs</DependentUpon>
+    <Compile Include="Views\AsistenciaView.Designer.cs">
+      <DependentUpon>AsistenciaView.cs</DependentUpon>
     </Compile>
     <Compile Include="Controller\AsistenciaController.cs" />
     <Compile Include="Controller\UsuarioController.cs" />
@@ -150,8 +150,8 @@
     <Compile Include="Views\UsuariosView.Designer.cs">
       <DependentUpon>UsuariosView.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Views\Asistencia.resx">
-      <DependentUpon>Asistencia.cs</DependentUpon>
+    <EmbeddedResource Include="Views\AsistenciaView.resx">
+      <DependentUpon>AsistenciaView.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\ListaUsuarios.resx">
       <DependentUpon>ListaUsuarios.cs</DependentUpon>

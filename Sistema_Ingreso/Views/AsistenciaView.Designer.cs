@@ -1,6 +1,6 @@
 ﻿namespace Sistema_Ingreso
 {
-    partial class Asistencia
+    partial class AsistenciaView
     {
         /// <summary> 
         /// Required designer variable.
