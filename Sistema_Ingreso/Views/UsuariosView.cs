@@ -18,13 +18,13 @@ using iTextSharp.text.pdf;
 using System.IO;
 using Sistema_Ingreso.Views;
 
-
 namespace Sistema_Ingreso
 {
     public partial class UsuariosView : UserControl
     {
         Bitmap imagenVehiculo;
         Bitmap imagenUsuario;
+
         public UsuariosView()
         {
             InitializeComponent();
@@ -50,25 +50,20 @@ namespace Sistema_Ingreso
         // Método para generar el código de barras
         private Bitmap GenerarCodigoBarras(string data)
         {
-            // Crear una instancia de BarcodeWriter
             BarcodeWriter escritorCodigoBarras = new BarcodeWriter
             {
-                Format = BarcodeFormat.CODE_128,  // Puedes cambiar a otros formatos si lo prefieres
+                Format = BarcodeFormat.CODE_128,
                 Options = new ZXing.Common.EncodingOptions
                 {
-                    Width = 300,  // Ancho del código de barras
-                    Height = 100,  // Altura del código de barras
-                    Margin = 10    // Margen
+                    Width = 300,
+                    Height = 100,
+                    Margin = 10
                 }
             };
 
-            // Generar el código de barras en formato Bitmap
             Bitmap bitmap = escritorCodigoBarras.Write(data);
             return bitmap;
         }
-
-     
-
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -109,7 +104,6 @@ namespace Sistema_Ingreso
         {
 
         }
-
         private void button2_Click(object sender, EventArgs e)
         {
             Models.Usuario nuevoUsuario = new Models.Usuario
@@ -119,14 +113,14 @@ namespace Sistema_Ingreso
                 Apellido = txtApellido.Text,
                 Grado = txtGrado.Text,
                 Unidad = txtUnidad.Text,
-                Imagen = ConvertirImagenABlobs(imagenUsuario), // Usando el método renombrado
-                CarnetCodigoBarras = GenerarCodigoDeBarrasComoBlobs(txtDocumento.Text), // Usando el método renombrado
+                Imagen = ConvertirImagenABlobs(imagenUsuario),
+                CarnetCodigoBarras = GenerarCodigoDeBarrasComoBlobs(txtDocumento.Text),
                 Vehiculo = new Vehiculo
                 {
                     Marca = txtMarca.Text,
                     Modelo = txtModelo.Text,
                     Placa = txtPlaca.Text,
-                    Imagen_vehiculo = ConvertirImagenABlobs(imagenVehiculo) // Usando el método renombrado
+                    Imagen_vehiculo = ConvertirImagenABlobs(imagenVehiculo)
                 }
             };
 
@@ -137,8 +131,8 @@ namespace Sistema_Ingreso
             {
                 MessageBox.Show("Usuario y vehículo guardados exitosamente.");
 
-                // Generar el PDF del carnet
-                GenerarCarnetPDF(nuevoUsuario);
+                // Generar la imagen del carnet en lugar de PDF
+                GenerarCarnetPNG(nuevoUsuario);
 
                 LimpiarCampos();
             }
@@ -150,47 +144,42 @@ namespace Sistema_Ingreso
             {
                 using (MemoryStream ms = new MemoryStream())
                 {
-                    imagen.Save(ms, System.Drawing.Imaging.ImageFormat.Png); // Guardar como PNG
-                    return ms.ToArray(); // Retornar el byte array
+                    imagen.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                    return ms.ToArray();
                 }
             }
-            return null; // Retornar null si la imagen es nula
+            return null;
         }
 
-        // Método para generar un código de barras como un BLOB (byte array)
         public byte[] GenerarCodigoDeBarrasComoBlobs(string codigo)
         {
             if (!string.IsNullOrEmpty(codigo))
             {
-                // Crear el generador de código de barras
                 BarcodeWriter barcodeWriter = new BarcodeWriter
                 {
-                    Format = BarcodeFormat.CODE_128, // Puedes cambiar el formato según tus necesidades
+                    Format = BarcodeFormat.CODE_128,
                     Options = new ZXing.Common.EncodingOptions
                     {
-                        Width = 300, // Ancho del código de barras
-                        Height = 100, // Altura del código de barras
-                        Margin = 10 // Margen
+                        Width = 300,
+                        Height = 100,
+                        Margin = 10
                     }
                 };
 
-                // Generar la imagen del código de barras
                 using (Bitmap bitmap = barcodeWriter.Write(codigo))
                 {
                     using (MemoryStream ms = new MemoryStream())
                     {
-                        bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png); // Guardar como PNG
-                        return ms.ToArray(); // Retornar el byte array
+                        bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                        return ms.ToArray();
                     }
                 }
             }
-            return null; // Retornar null si el código es nulo o vacío
+            return null;
         }
-
 
         private void LimpiarCampos()
         {
-            // Limpiar los campos de texto
             txtDocumento.Text = string.Empty;
             txtNombre.Text = string.Empty;
             txtApellido.Text = string.Empty;
@@ -200,21 +189,12 @@ namespace Sistema_Ingreso
             txtModelo.Text = string.Empty;
             txtPlaca.Text = string.Empty;
 
-            // Restablecer las imágenes a null o una imagen predeterminada
-            imagenUsuario = null; // Asigna null o la imagen predeterminada
-            imagenVehiculo = null; // Asigna null o la imagen predeterminada
+            imagenUsuario = null;
+            imagenVehiculo = null;
 
-            // Si tienes PictureBox para mostrar imágenes, también debes limpiar su contenido
-            pctbFotoUsuario.Image = null; // PictureBox para la imagen del usuario
-            pctbVehiculo.Image = null; // PictureBox para la imagen del vehículo
-
-
+            pctbFotoUsuario.Image = null;
+            pctbVehiculo.Image = null;
         }
-
-
-
-        // Método modificado para convertir Bitmap a byte[]
-        
 
         private void btnCargarFoto_Click(object sender, EventArgs e)
         {
@@ -223,11 +203,10 @@ namespace Sistema_Ingreso
                 openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    imagenUsuario = new Bitmap(openFileDialog.FileName); // Guardar la imagen en la variable
-                    pctbFotoUsuario.Image = imagenUsuario; // Mostrar la imagen en el PictureBox
+                    imagenUsuario = new Bitmap(openFileDialog.FileName);
+                    pctbFotoUsuario.Image = imagenUsuario;
                 }
             }
-
         }
 
         private void btnCargarFotoVehiculo_Click(object sender, EventArgs e)
@@ -237,109 +216,80 @@ namespace Sistema_Ingreso
                 openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp";
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    imagenVehiculo = new Bitmap(openFileDialog.FileName); // Guardar la imagen en la variable
-                    pctbVehiculo.Image = imagenVehiculo; // Mostrar la imagen en el PictureBox
+                    imagenVehiculo = new Bitmap(openFileDialog.FileName);
+                    pctbVehiculo.Image = imagenVehiculo;
                 }
             }
         }
 
-
-
-        public void GenerarCarnetPDF(Models.Usuario usuario)
+        public void GenerarCarnetPNG(Models.Usuario usuario)
         {
-            // Ruta donde se guardará el PDF
-            string rutaPDF = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"{usuario.Documento}_Carnet.pdf");
+            // Ruta donde se guardará el PNG
+            string rutaPNG = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"{usuario.Documento}_Carnet.png");
 
-            // Tamaño personalizado para la tarjeta de crédito
-            var tamañoTarjeta = new iTextSharp.text.Rectangle(242.64f, 153.54f); // 85.6 mm x 53.98 mm
-            Document documento = new Document(tamañoTarjeta, 0, 0, 0, 0); // Sin márgenes
-
-            try
+            using (Bitmap bitmap = new Bitmap(400, 600)) // Dimensiones del carnet
             {
-                PdfWriter writer = PdfWriter.GetInstance(documento, new FileStream(rutaPDF, FileMode.Create));
-                documento.Open();
-
-                // Añadir la imagen del usuario
-                if (usuario.Imagen != null)
+                using (Graphics g = Graphics.FromImage(bitmap))
                 {
-                    iTextSharp.text.Image fotoUsuario = iTextSharp.text.Image.GetInstance(usuario.Imagen);
-                    fotoUsuario.ScaleToFit(50f, 70f); // Ajustar el tamaño de la imagen
-                    fotoUsuario.Alignment = Element.ALIGN_CENTER;
-                    documento.Add(fotoUsuario);
+                    g.Clear(Color.White);
+                    g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
+                    // Añadir la imagen del usuario
+                    if (usuario.Imagen != null)
+                    {
+                        using (System.Drawing.Image fotoUsuario = System.Drawing.Image.FromStream(new MemoryStream(usuario.Imagen)))
+                        {
+                            // Ajusta la posición y tamaño de la imagen del usuario
+                            int fotoAncho = 100;
+                            int fotoAlto = 150;
+                            int fotoX = (bitmap.Width - fotoAncho) / 2; // Centrado horizontal
+                            int fotoY = 10; // Posición vertical
+                            g.DrawImage(fotoUsuario, new System.Drawing.Rectangle(fotoX, fotoY, fotoAncho, fotoAlto));
+                        }
+                    }
+
+                    // Añadir la información del usuario
+                    g.DrawString($"Documento: {usuario.Documento}", new System.Drawing.Font("Arial", 12), Brushes.Black, new PointF(10, 170));
+                    g.DrawString($"Nombre: {usuario.Nombre} {usuario.Apellido}", new System.Drawing.Font("Arial", 12), Brushes.Black, new PointF(10, 210));
+                    g.DrawString($"Grado: {usuario.Grado}", new System.Drawing.Font("Arial", 12), Brushes.Black, new PointF(10, 250));
+                    g.DrawString($"Unidad: {usuario.Unidad}", new System.Drawing.Font("Arial", 12), Brushes.Black, new PointF(10, 290));
+
+                    // Añadir código de barras
+                    if (usuario.CarnetCodigoBarras != null)
+                    {
+                        using (System.Drawing.Image codigoBarras = System.Drawing.Image.FromStream(new MemoryStream(usuario.CarnetCodigoBarras)))
+                        {
+                            // Ajusta la posición y tamaño del código de barras
+                            int codigoAncho = 280;
+                            int codigoAlto = 100;
+                            int codigoX = (bitmap.Width - codigoAncho) / 2; // Centrado horizontal
+                            int codigoY = 320; // Posición vertical
+                            g.DrawImage(codigoBarras, new System.Drawing.Rectangle(codigoX, codigoY, codigoAncho, codigoAlto));
+                        }
+                    }
                 }
 
-                // Espacio entre la foto y el texto
-                documento.Add(new Paragraph("\n"));
-
-                // Añadir la información del usuario
-                documento.Add(new Paragraph($"Documento: {usuario.Documento}", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                documento.Add(new Paragraph($"Nombre: {usuario.Nombre} {usuario.Apellido}", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                documento.Add(new Paragraph($"Grado: {usuario.Grado}", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                documento.Add(new Paragraph($"Unidad: {usuario.Unidad}", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-
-                // Añadir espacio antes del código de barras
-                documento.Add(new Paragraph("\n"));
-
-                // Generar código de barras
-                if (usuario.CarnetCodigoBarras != null)
-                {
-                    iTextSharp.text.Image codigoBarras = iTextSharp.text.Image.GetInstance(usuario.CarnetCodigoBarras);
-                    codigoBarras.ScaleToFit(150f, 30f); // Ajustar el tamaño del código de barras
-                    codigoBarras.Alignment = Element.ALIGN_CENTER;
-                    documento.Add(codigoBarras);
-                }
-
-                // Cierra el documento
-                documento.Close();
-                MessageBox.Show("PDF de carnet generado exitosamente.");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al generar el PDF: " + ex.Message);
+                // Guardar el bitmap como PNG
+                bitmap.Save(rutaPNG, System.Drawing.Imaging.ImageFormat.Png);
+                MessageBox.Show("PNG del carnet generado exitosamente.");
             }
         }
 
 
-
-
-
-        // Método para generar un código de barras como imagen en bytes
-        public byte[] ObtenerCodigoDeBarrasComoBytes(string codigo)
-        {
-            if (!string.IsNullOrEmpty(codigo))
-            {
-                Barcode128 barcode = new Barcode128
-                {
-                    Code = codigo
-                };
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    // Especificar el espacio de nombres para evitar la ambigüedad
-                    System.Drawing.Image imagenCodigo = barcode.CreateDrawingImage(Color.Black, Color.White);
-                    imagenCodigo.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                    return ms.ToArray();
-                }
-            }
-            return null;
-        }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            // Verifica si la ventana ListaUsuarios ya está abierta
             foreach (Form form in Application.OpenForms)
             {
                 if (form is ListaUsuarios)
                 {
-                    form.BringToFront(); // Si ya está abierta, la trae al frente
+                    form.BringToFront();
                     return;
                 }
             }
 
-            // Si no está abierta, crea una nueva instancia
             ListaUsuarios listaUsuarios = new ListaUsuarios();
-            listaUsuarios.Show(); // o listaUsuarios.ShowDialog() para un diálogo modal
+            listaUsuarios.Show();
         }
-
     }
 }
-

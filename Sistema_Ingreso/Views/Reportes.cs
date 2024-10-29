@@ -11,7 +11,7 @@ namespace Sistema_Ingreso
     public partial class Reportes : UserControl
     {
         private MySqlConnection conexion;
-        
+
         public Reportes()
         {
             InitializeComponent();
@@ -20,7 +20,7 @@ namespace Sistema_Ingreso
             CargarAsistencias();
         }
 
-        private void CargarAsistencias()
+        private void CargarAsistencias(string filtro = "")
         {
             List<Asistencia> asistencias = new List<Asistencia>();
 
@@ -29,9 +29,10 @@ namespace Sistema_Ingreso
                 Conexion conexion = new Conexion();
                 using (MySqlConnection connection = conexion.ObtenerConexion())
                 {
+                    // Modificación en la consulta SQL para incluir el filtro
                     string query = @"SELECT 
                                 a.id, 
-                                u.nombre AS UsuarioNombre, 
+                                CONCAT(u.nombre, ' ', u.apellido) AS UsuarioNombre, 
                                 v.placa AS VehiculoPlaca, 
                                 mi.descripcion AS ModoIngresoDescripcion, 
                                 a.fecha_hora, 
@@ -39,17 +40,35 @@ namespace Sistema_Ingreso
                              FROM asistencias a
                              JOIN Usuarios u ON a.usuario_id = u.id
                              JOIN Vehiculos v ON a.vehiculo_id = v.id
-                             JOIN modos_ingreso mi ON a.modo_ingreso_id = mi.id";
+                             JOIN modos_ingreso mi ON a.modo_ingreso_id = mi.id
+                             WHERE (@filtro = '' OR 
+                                    u.nombre LIKE @filtro OR 
+                                    u.documento LIKE @filtro OR 
+                                    u.grado LIKE @filtro OR 
+                                    DATE(a.fecha_hora) = @fecha)
+                             ORDER BY a.fecha_hora DESC;";
 
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
                         conexion.Conectar();
 
+                        // Parámetro del filtro con comodín
+                        command.Parameters.AddWithValue("@filtro", "%" + filtro + "%");
+
+                        // Verificar si el filtro es una fecha válida
+                        if (DateTime.TryParse(filtro, out DateTime fechaFiltro))
+                        {
+                            command.Parameters.AddWithValue("@fecha", fechaFiltro.ToString("yyyy-MM-dd"));
+                        }
+                        else
+                        {
+                            command.Parameters.AddWithValue("@fecha", DBNull.Value);
+                        }
+
                         using (MySqlDataReader reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                // Crear una nueva variable local de Asistencia
                                 Asistencia asistencia = new Asistencia
                                 {
                                     Id = reader.GetInt32("id"),
@@ -60,7 +79,6 @@ namespace Sistema_Ingreso
                                     Tipo = reader["tipo"].ToString()
                                 };
 
-                                // Agregar la asistencia a la lista
                                 asistencias.Add(asistencia);
                             }
                         }
@@ -68,54 +86,51 @@ namespace Sistema_Ingreso
                         conexion.Cerrar();
                     }
 
-                    // Configura el DataGridView para no generar columnas automáticamente
-                    dgvRegistros.AutoGenerateColumns = false;
-
-                    // Limpia cualquier columna existente
-                    dgvRegistros.Columns.Clear();
-
-                    // Define las columnas manualmente
-                    dgvRegistros.Columns.Add(new DataGridViewTextBoxColumn
+                    // Configurar columnas del DataGridView si es la primera carga
+                    if (dgvRegistros.Columns.Count == 0)
                     {
-                        DataPropertyName = "Id",
-                        HeaderText = "ID"
-                    });
+                        dgvRegistros.AutoGenerateColumns = false;
+                        dgvRegistros.Columns.Clear();
 
-                    dgvRegistros.Columns.Add(new DataGridViewTextBoxColumn
-                    {
-                        DataPropertyName = "UsuarioNombre",
-                        HeaderText = "Nombre del Usuario"
-                    });
+                        dgvRegistros.Columns.Add(new DataGridViewTextBoxColumn
+                        {
+                            DataPropertyName = "Id",
+                            HeaderText = "ID"
+                        });
 
-                    dgvRegistros.Columns.Add(new DataGridViewTextBoxColumn
-                    {
-                        DataPropertyName = "VehiculoPlaca",
-                        HeaderText = "Placa del Vehículo"
-                    });
+                        dgvRegistros.Columns.Add(new DataGridViewTextBoxColumn
+                        {
+                            DataPropertyName = "UsuarioNombre",
+                            HeaderText = "Nombre del Usuario"
+                        });
 
-                    dgvRegistros.Columns.Add(new DataGridViewTextBoxColumn
-                    {
-                        DataPropertyName = "ModoIngresoDescripcion",
-                        HeaderText = "Modo de Ingreso"
-                    });
+                        dgvRegistros.Columns.Add(new DataGridViewTextBoxColumn
+                        {
+                            DataPropertyName = "VehiculoPlaca",
+                            HeaderText = "Placa del Vehículo"
+                        });
 
-                    dgvRegistros.Columns.Add(new DataGridViewTextBoxColumn
-                    {
-                        DataPropertyName = "FechaHora",
-                        HeaderText = "Fecha y Hora"
-                    });
+                        dgvRegistros.Columns.Add(new DataGridViewTextBoxColumn
+                        {
+                            DataPropertyName = "ModoIngresoDescripcion",
+                            HeaderText = "Modo de Ingreso"
+                        });
 
-                    dgvRegistros.Columns.Add(new DataGridViewTextBoxColumn
-                    {
-                        DataPropertyName = "Tipo",
-                        HeaderText = "Tipo"
-                    });
+                        dgvRegistros.Columns.Add(new DataGridViewTextBoxColumn
+                        {
+                            DataPropertyName = "FechaHora",
+                            HeaderText = "Fecha y Hora"
+                        });
+
+                        dgvRegistros.Columns.Add(new DataGridViewTextBoxColumn
+                        {
+                            DataPropertyName = "Tipo",
+                            HeaderText = "Tipo"
+                        });
+                    }
 
                     // Asignar la lista de asistencias al DataGridView
                     dgvRegistros.DataSource = asistencias;
-
-                    // Agregar la columna de botones
-                    dgvRegistros.Columns.Add(CreateActionButtonColumn());
                 }
             }
             catch (MySqlException sqlEx)
@@ -127,6 +142,20 @@ namespace Sistema_Ingreso
                 MessageBox.Show($"Error al cargar asistencias: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+
+        // Evento de búsqueda
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+            CargarAsistencias(txtBuscar.Text);
+        }
+
+        // Alternativamente, para búsqueda en tiempo real
+        private void txtBuscar_TextChanged(object sender, EventArgs e)
+        {
+            CargarAsistencias(txtBuscar.Text);
+        }
+
 
         // Método para crear una columna de botón
         private DataGridViewButtonColumn CreateActionButtonColumn()
@@ -140,7 +169,6 @@ namespace Sistema_Ingreso
             };
             return buttonColumn;
         }
-
 
 
     }

@@ -30,6 +30,8 @@
         {
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.pctbFotoVehiculo = new System.Windows.Forms.PictureBox();
+            this.pctbFotoUsuario = new System.Windows.Forms.PictureBox();
             this.txtCodigo = new System.Windows.Forms.TextBox();
             this.lblPlaca = new System.Windows.Forms.Label();
             this.lblModelo = new System.Windows.Forms.Label();
@@ -52,12 +54,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.pctbFotoUsuario = new System.Windows.Forms.PictureBox();
-            this.pctbFotoVehiculo = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pctbFotoUsuario)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pctbFotoVehiculo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pctbFotoUsuario)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -101,10 +101,32 @@
             this.panel3.Size = new System.Drawing.Size(962, 579);
             this.panel3.TabIndex = 17;
             // 
+            // pctbFotoVehiculo
+            // 
+            this.pctbFotoVehiculo.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.pctbFotoVehiculo.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pctbFotoVehiculo.Location = new System.Drawing.Point(605, 394);
+            this.pctbFotoVehiculo.Name = "pctbFotoVehiculo";
+            this.pctbFotoVehiculo.Size = new System.Drawing.Size(282, 179);
+            this.pctbFotoVehiculo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pctbFotoVehiculo.TabIndex = 29;
+            this.pctbFotoVehiculo.TabStop = false;
+            // 
+            // pctbFotoUsuario
+            // 
+            this.pctbFotoUsuario.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.pctbFotoUsuario.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pctbFotoUsuario.Location = new System.Drawing.Point(619, 203);
+            this.pctbFotoUsuario.Name = "pctbFotoUsuario";
+            this.pctbFotoUsuario.Size = new System.Drawing.Size(158, 178);
+            this.pctbFotoUsuario.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pctbFotoUsuario.TabIndex = 28;
+            this.pctbFotoUsuario.TabStop = false;
+            // 
             // txtCodigo
             // 
             this.txtCodigo.Font = new System.Drawing.Font("Arial Rounded MT Bold", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCodigo.Location = new System.Drawing.Point(551, 43);
+            this.txtCodigo.Location = new System.Drawing.Point(554, 20);
             this.txtCodigo.Name = "txtCodigo";
             this.txtCodigo.Size = new System.Drawing.Size(182, 35);
             this.txtCodigo.TabIndex = 27;
@@ -147,7 +169,7 @@
             this.lblUnidad.AutoSize = true;
             this.lblUnidad.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUnidad.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblUnidad.Location = new System.Drawing.Point(629, 181);
+            this.lblUnidad.Location = new System.Drawing.Point(632, 152);
             this.lblUnidad.Name = "lblUnidad";
             this.lblUnidad.Size = new System.Drawing.Size(94, 22);
             this.lblUnidad.TabIndex = 22;
@@ -158,7 +180,7 @@
             this.lblGrado.AutoSize = true;
             this.lblGrado.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblGrado.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblGrado.Location = new System.Drawing.Point(629, 132);
+            this.lblGrado.Location = new System.Drawing.Point(632, 103);
             this.lblGrado.Name = "lblGrado";
             this.lblGrado.Size = new System.Drawing.Size(86, 22);
             this.lblGrado.TabIndex = 21;
@@ -169,7 +191,7 @@
             this.lblApellido.AutoSize = true;
             this.lblApellido.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblApellido.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblApellido.Location = new System.Drawing.Point(165, 232);
+            this.lblApellido.Location = new System.Drawing.Point(168, 203);
             this.lblApellido.Name = "lblApellido";
             this.lblApellido.Size = new System.Drawing.Size(104, 22);
             this.lblApellido.TabIndex = 20;
@@ -180,7 +202,7 @@
             this.lblNombre.AutoSize = true;
             this.lblNombre.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblNombre.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblNombre.Location = new System.Drawing.Point(165, 181);
+            this.lblNombre.Location = new System.Drawing.Point(168, 152);
             this.lblNombre.Name = "lblNombre";
             this.lblNombre.Size = new System.Drawing.Size(102, 22);
             this.lblNombre.TabIndex = 19;
@@ -191,7 +213,7 @@
             this.lblDocumento.AutoSize = true;
             this.lblDocumento.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDocumento.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblDocumento.Location = new System.Drawing.Point(165, 132);
+            this.lblDocumento.Location = new System.Drawing.Point(168, 103);
             this.lblDocumento.Name = "lblDocumento";
             this.lblDocumento.Size = new System.Drawing.Size(133, 22);
             this.lblDocumento.TabIndex = 18;
@@ -268,7 +290,7 @@
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label6.Location = new System.Drawing.Point(527, 232);
+            this.label6.Location = new System.Drawing.Point(530, 203);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(56, 22);
             this.label6.TabIndex = 5;
@@ -279,7 +301,7 @@
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label4.Location = new System.Drawing.Point(527, 132);
+            this.label4.Location = new System.Drawing.Point(530, 103);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(73, 22);
             this.label4.TabIndex = 3;
@@ -290,7 +312,7 @@
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label5.Location = new System.Drawing.Point(527, 181);
+            this.label5.Location = new System.Drawing.Point(530, 152);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(81, 22);
             this.label5.TabIndex = 4;
@@ -301,7 +323,7 @@
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label2.Location = new System.Drawing.Point(19, 132);
+            this.label2.Location = new System.Drawing.Point(22, 103);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(120, 22);
             this.label2.TabIndex = 0;
@@ -312,7 +334,7 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label3.Location = new System.Drawing.Point(19, 181);
+            this.label3.Location = new System.Drawing.Point(22, 152);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(89, 22);
             this.label3.TabIndex = 1;
@@ -323,7 +345,7 @@
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label8.Location = new System.Drawing.Point(19, 232);
+            this.label8.Location = new System.Drawing.Point(22, 203);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(91, 22);
             this.label8.TabIndex = 2;
@@ -340,41 +362,19 @@
             this.label7.TabIndex = 7;
             this.label7.Text = "Control de Ingreso";
             // 
-            // pctbFotoUsuario
-            // 
-            this.pctbFotoUsuario.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.pctbFotoUsuario.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pctbFotoUsuario.Location = new System.Drawing.Point(624, 232);
-            this.pctbFotoUsuario.Name = "pctbFotoUsuario";
-            this.pctbFotoUsuario.Size = new System.Drawing.Size(132, 135);
-            this.pctbFotoUsuario.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pctbFotoUsuario.TabIndex = 28;
-            this.pctbFotoUsuario.TabStop = false;
-            // 
-            // pctbFotoVehiculo
-            // 
-            this.pctbFotoVehiculo.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.pctbFotoVehiculo.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pctbFotoVehiculo.Location = new System.Drawing.Point(605, 394);
-            this.pctbFotoVehiculo.Name = "pctbFotoVehiculo";
-            this.pctbFotoVehiculo.Size = new System.Drawing.Size(283, 163);
-            this.pctbFotoVehiculo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pctbFotoVehiculo.TabIndex = 29;
-            this.pctbFotoVehiculo.TabStop = false;
-            // 
-            // Asistencia
+            // AsistenciaView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
-            this.Name = "Asistencia";
+            this.Name = "AsistenciaView";
             this.Size = new System.Drawing.Size(1060, 729);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pctbFotoUsuario)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pctbFotoVehiculo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pctbFotoUsuario)).EndInit();
             this.ResumeLayout(false);
 
         }

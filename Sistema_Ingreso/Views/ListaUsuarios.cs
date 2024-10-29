@@ -4,37 +4,43 @@ using MySql.Data.MySqlClient;
 using Sistema_Ingreso.Models;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlClient; // Cambia esto si usas otro tipo de base de datos
+using System.Data;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
+using ZXing; // Asegúrate de agregar esta línea para el código de barras
 
 namespace Sistema_Ingreso.Views
 {
     public partial class ListaUsuarios : Form
     {
         private Conexion Conexion;
+        private List<Usuario> usuarios; // Guardar la lista de usuarios
+        private BindingSource bindingSource; // BindingSource para el DataGridView
 
         public ListaUsuarios()
         {
             Conexion = new Conexion();
             InitializeComponent();
+            bindingSource = new BindingSource(); // Inicializa el BindingSource
             CargarUsuarios();
+            dataGridViewUsuarios.CellContentClick += dataGridViewUsuarios_CellContentClick;
         }
 
         private void CargarUsuarios()
         {
-            List<Usuario> usuarios = new List<Usuario>();
+            usuarios = new List<Usuario>();
 
             try
             {
-                Conexion conexion = new Conexion();
-                using (MySqlConnection connection = conexion.ObtenerConexion())
+                using (MySqlConnection connection = Conexion.ObtenerConexion())
                 {
-                    string query = "SELECT id, documento, nombre, apellido, grado, unidad FROM Usuarios";
+                    string query = "SELECT id, documento, nombre, apellido, grado, unidad, imagen FROM Usuarios";
 
                     using (MySqlCommand command = new MySqlCommand(query, connection))
                     {
-                        conexion.Conectar();
+                        Conexion.Conectar();
 
                         using (MySqlDataReader reader = command.ExecuteReader())
                         {
@@ -47,12 +53,13 @@ namespace Sistema_Ingreso.Views
                                     Nombre = reader["nombre"].ToString(),
                                     Apellido = reader["apellido"].ToString(),
                                     Grado = reader["grado"].ToString(),
-                                    Unidad = reader["unidad"].ToString()
+                                    Unidad = reader["unidad"].ToString(),
+                                    Imagen = reader["imagen"] as byte[] // Asegúrate de que la imagen se esté cargando correctamente
                                 });
                             }
                         }
 
-                        conexion.Cerrar();
+                        Conexion.Cerrar();
                     }
 
                     // Configura el DataGridView para no generar columnas automáticamente
@@ -98,8 +105,9 @@ namespace Sistema_Ingreso.Views
                         HeaderText = "Unidad"
                     });
 
-                    // Asignar la lista de usuarios al DataGridView
-                    dataGridViewUsuarios.DataSource = usuarios;
+                    // Asignar la lista de usuarios al BindingSource
+                    bindingSource.DataSource = usuarios;
+                    dataGridViewUsuarios.DataSource = bindingSource; // Asigna el BindingSource al DataGridView
 
                     // Agregar la columna de botones
                     dataGridViewUsuarios.Columns.Add(CreatePrintButtonColumn());
@@ -115,8 +123,6 @@ namespace Sistema_Ingreso.Views
             }
         }
 
-
-
         private DataGridViewButtonColumn CreatePrintButtonColumn()
         {
             var printButtonColumn = new DataGridViewButtonColumn
@@ -131,85 +137,104 @@ namespace Sistema_Ingreso.Views
 
         private void dataGridViewUsuarios_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            // Verifica si la celda clickeada es un botón
             if (e.RowIndex >= 0 && e.ColumnIndex == dataGridViewUsuarios.Columns["ImprimirCarnet"].Index)
             {
-                // Obtener el usuario correspondiente
                 var usuario = (Usuario)dataGridViewUsuarios.Rows[e.RowIndex].DataBoundItem;
 
-                // Llamar al método para generar el carnet
-                GenerarCarnetPDF(usuario);
+                // Verificación adicional de datos necesarios
+                if (usuario != null)
+                {
+                    GenerarCarnetPNG(usuario); // Cambiado a PNG
+                }
+                else
+                {
+                    MessageBox.Show("Error: El usuario seleccionado es nulo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
-        public void GenerarCarnetPDF(Models.Usuario usuario)
+        public void GenerarCarnetPNG(Models.Usuario usuarioSeleccionado)
         {
-            // Ruta donde se guardará el PDF
-            string rutaPDF = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"{usuario.Documento}_Carnet.pdf");
+            // Ruta donde se guardará el PNG
+            string rutaPNG = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Desktop), $"{usuarioSeleccionado.Documento}_Carnet.png");
 
-            // Tamaño personalizado para la tarjeta de crédito
-            var tamañoTarjeta = new iTextSharp.text.Rectangle(242.64f, 153.54f); // 85.6 mm x 53.98 mm
-            Document documento = new Document(tamañoTarjeta, 0, 0, 0, 0); // Sin márgenes
+            // Tamaño personalizado para una tarjeta
+            int anchoTarjeta = 400; // Ajusta según tus necesidades
+            int altoTarjeta = 600; // Aumentado para hacer el carnet más vertical
 
-            try
+            using (var bitmap = new System.Drawing.Bitmap(anchoTarjeta, altoTarjeta))
+            using (var graphics = System.Drawing.Graphics.FromImage(bitmap))
             {
-                PdfWriter writer = PdfWriter.GetInstance(documento, new FileStream(rutaPDF, FileMode.Create));
-                documento.Open();
+                graphics.Clear(System.Drawing.Color.White); // Fondo blanco
 
-                // Añadir la imagen del usuario si existe
-                if (usuario.Imagen != null)
+                // Establecer la fuente para el texto
+                var font = new System.Drawing.Font("Arial", 14); // Aumenta el tamaño de la fuente
+                var brush = new System.Drawing.SolidBrush(System.Drawing.Color.Black);
+
+                // Dibuja la imagen del usuario en la parte superior
+                if (usuarioSeleccionado.Imagen != null)
                 {
-                    try
+                    using (var imagenUsuario = ConvertirBytesAImagen(usuarioSeleccionado.Imagen))
                     {
-                        iTextSharp.text.Image fotoUsuario = iTextSharp.text.Image.GetInstance(usuario.Imagen);
-                        fotoUsuario.ScaleToFit(50f, 70f); // Ajustar el tamaño de la imagen
-                        fotoUsuario.Alignment = Element.ALIGN_CENTER;
-                        documento.Add(fotoUsuario);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error al cargar la imagen del usuario: {ex.Message}");
+                        graphics.DrawImage(imagenUsuario, (anchoTarjeta - 150) / 2, 10, 100, 150); // Dibuja la imagen centrada
                     }
                 }
 
-                // Espacio entre la foto y el texto
-                documento.Add(new Paragraph("\n"));
+                // Dibuja la información del usuario debajo de la imagen
+                graphics.DrawString($"Documento: {usuarioSeleccionado.Documento}", font, brush, 10, 170);
+                graphics.DrawString($"Nombre: {usuarioSeleccionado.Nombre} {usuarioSeleccionado.Apellido}", font, brush, 10, 210);
+                graphics.DrawString($"Grado: {usuarioSeleccionado.Grado}", font, brush, 10, 250);
+                graphics.DrawString($"Unidad: {usuarioSeleccionado.Unidad}", font, brush, 10, 290);
 
-                // Añadir la información del usuario
-                documento.Add(new Paragraph($"Documento: {usuario.Documento}", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                documento.Add(new Paragraph($"Nombre: {usuario.Nombre} {usuario.Apellido}", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                documento.Add(new Paragraph($"Grado: {usuario.Grado}", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
-                documento.Add(new Paragraph($"Unidad: {usuario.Unidad}", FontFactory.GetFont(FontFactory.HELVETICA, 8)));
+                // Generar el código de barras
+                var codigoBarras = GenerarCodigoDeBarras(usuarioSeleccionado.Documento);
+                graphics.DrawImage(codigoBarras, (anchoTarjeta - 200) / 2, 320, 200, 100); // Dibuja el código de barras centrado
 
-                // Añadir espacio antes del código de barras
-                documento.Add(new Paragraph("\n"));
-
-                // Generar código de barras si existe
-                if (usuario.CarnetCodigoBarras != null)
-                {
-                    try
-                    {
-                        iTextSharp.text.Image codigoBarras = iTextSharp.text.Image.GetInstance(usuario.CarnetCodigoBarras);
-                        codigoBarras.ScaleToFit(150f, 30f); // Ajustar el tamaño del código de barras
-                        codigoBarras.Alignment = Element.ALIGN_CENTER;
-                        documento.Add(codigoBarras);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Error al cargar el código de barras: {ex.Message}");
-                    }
-                }
-
-                // Cierra el documento
-                documento.Close();
-                MessageBox.Show("PDF de carnet generado exitosamente.");
+                // Guardar la tarjeta como PNG
+                bitmap.Save(rutaPNG, System.Drawing.Imaging.ImageFormat.Png);
             }
-            catch (Exception ex)
+
+            MessageBox.Show("PNG de carnet generado exitosamente en el escritorio.");
+        }
+
+        // Método para generar código de barras
+        public Bitmap GenerarCodigoDeBarras(string texto)
+        {
+            var writer = new BarcodeWriter
             {
-                MessageBox.Show("Error al generar el PDF: " + ex.Message);
+                Format = ZXing.BarcodeFormat.CODE_128,
+                Options = new ZXing.Common.EncodingOptions
+                {
+                    Width = 200,
+                    Height = 100
+                }
+            };
+            return writer.Write(texto);
+        }
+
+        // Método para convertir byte[] a System.Drawing.Image
+        public System.Drawing.Image ConvertirBytesAImagen(byte[] imagenBytes)
+        {
+            using (var ms = new MemoryStream(imagenBytes))
+            {
+                return System.Drawing.Image.FromStream(ms);
             }
         }
 
-    }
+        private void btnBuscar_Click(object sender, EventArgs e)
+        {
+            string filtro = txtBuscar.Text.ToLower();
 
+            // Filtrar la lista de usuarios
+            var usuariosFiltrados = usuarios.Where(u =>
+                u.Documento.ToLower().Contains(filtro) ||
+                u.Nombre.ToLower().Contains(filtro) ||
+                u.Apellido.ToLower().Contains(filtro) ||
+                u.Grado.ToLower().Contains(filtro) ||
+                u.Unidad.ToLower().Contains(filtro)).ToList();
+
+            // Asignar la lista filtrada al BindingSource
+            bindingSource.DataSource = usuariosFiltrados;
+        }
+    }
 }

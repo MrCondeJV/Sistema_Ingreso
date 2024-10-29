@@ -232,20 +232,19 @@ WHERE u.documento = @documento;
         private void RegistrarAsistencia(int usuarioId, int vehiculoId)
         {
             // Primero, verifica el último registro del usuario
-            int tipoIngresoId = ObtenerUltimoRegistroModoIngreso(usuarioId); // Entrada/Salida
+            var ultimoRegistro = ObtenerUltimoRegistro(usuarioId); // Cambia este método para devolver un objeto con los valores necesarios
+
+            int tipoIngresoId = ultimoRegistro.Tipo; // Obtiene el tipo de ingreso (1: entrada, 2: salida)
+            int modoIngresoId = (vehiculoId > 0) ? 1 : 2; // 1: Vehículo, 2: Peatón
+
+            // Agregar logs para depuración
+            Console.WriteLine($"Último registro de ingreso: {tipoIngresoId}");
 
             // Determinar el nuevo tipo de ingreso
-            if (tipoIngresoId == 1) // Último registro fue una entrada
-            {
-                tipoIngresoId = 2; // Nuevo registro será una salida
-            }
-            else // Último registro fue una salida o no hay registros
-            {
-                tipoIngresoId = 1; // Nuevo registro será una entrada
-            }
+            tipoIngresoId = (tipoIngresoId == 1) ? 2 : 1; // Alternar entre 1 y 2
 
-            // Determinar el modo de ingreso
-            int modoIngresoId = (vehiculoId > 0) ? 1 : 2; // 1: Vehículo, 2: Peatón
+            // Agregar logs para depuración
+            Console.WriteLine($"Nuevo tipo de ingreso: {tipoIngresoId}");
 
             // Ahora, registrar el nuevo ingreso/salida
             string query = "INSERT INTO asistencias (usuario_id, vehiculo_id, modo_ingreso_id, fecha_hora, tipo) " +
@@ -275,11 +274,11 @@ WHERE u.documento = @documento;
             }
         }
 
-
-        private int ObtenerUltimoRegistroModoIngreso(int usuarioId)
+        private (int ModoIngresoId, int Tipo) ObtenerUltimoRegistro(int usuarioId)
         {
-            int modoIngresoId = 0; // 0 si no hay registros
-            string query = "SELECT modo_ingreso_id FROM asistencias WHERE usuario_id = @usuarioId ORDER BY fecha_hora DESC LIMIT 1";
+            int modoIngresoId = -1; // Inicializar como -1 para indicar que no se encontró un registro
+            int tipo = -1; // Inicializar como -1 para indicar que no se encontró un tipo
+            string query = "SELECT modo_ingreso_id, tipo FROM asistencias WHERE usuario_id = @usuarioId ORDER BY fecha_hora DESC LIMIT 1";
 
             try
             {
@@ -292,6 +291,14 @@ WHERE u.documento = @documento;
                         if (reader.Read())
                         {
                             modoIngresoId = reader.GetInt32("modo_ingreso_id");
+                            string tipoString = reader.GetString("tipo");
+
+                            // Determinar el tipo opuesto basado en el valor del tipo
+                            tipo = (tipoString == "Entrada") ? 1 : 2; // 2 para salida, 1 para entrada
+                        }
+                        else
+                        {
+                            Console.WriteLine($"No se encontraron registros para el usuario con ID: {usuarioId}.");
                         }
                     }
                 }
@@ -305,9 +312,8 @@ WHERE u.documento = @documento;
                 conexion.Cerrar();
             }
 
-            return modoIngresoId;
+            return (modoIngresoId, tipo);
         }
-
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {

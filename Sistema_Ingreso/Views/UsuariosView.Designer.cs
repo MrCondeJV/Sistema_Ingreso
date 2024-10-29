@@ -37,8 +37,10 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.button3 = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.pctbFotoUsuario = new System.Windows.Forms.PictureBox();
             this.btnCargarFoto = new System.Windows.Forms.Button();
             this.label13 = new System.Windows.Forms.Label();
+            this.pictureBoxBarcode = new System.Windows.Forms.PictureBox();
             this.btnGenerrarBarra = new System.Windows.Forms.Button();
             this.txtUnidad = new System.Windows.Forms.TextBox();
             this.txtGrado = new System.Windows.Forms.TextBox();
@@ -47,6 +49,7 @@
             this.txtDocumento = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.pctbVehiculo = new System.Windows.Forms.PictureBox();
             this.btnCargarFotoVehiculo = new System.Windows.Forms.Button();
             this.txtPlaca = new System.Windows.Forms.TextBox();
             this.txtModelo = new System.Windows.Forms.TextBox();
@@ -58,14 +61,11 @@
             this.label9 = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.button1 = new System.Windows.Forms.Button();
-            this.pctbFotoUsuario = new System.Windows.Forms.PictureBox();
-            this.pictureBoxBarcode = new System.Windows.Forms.PictureBox();
-            this.pctbVehiculo = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
-            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pctbFotoUsuario)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBarcode)).BeginInit();
+            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pctbVehiculo)).BeginInit();
             this.SuspendLayout();
             // 
@@ -189,6 +189,17 @@
             this.panel3.Size = new System.Drawing.Size(962, 320);
             this.panel3.TabIndex = 16;
             // 
+            // pctbFotoUsuario
+            // 
+            this.pctbFotoUsuario.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.pctbFotoUsuario.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pctbFotoUsuario.Location = new System.Drawing.Point(563, 38);
+            this.pctbFotoUsuario.Name = "pctbFotoUsuario";
+            this.pctbFotoUsuario.Size = new System.Drawing.Size(158, 178);
+            this.pctbFotoUsuario.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pctbFotoUsuario.TabIndex = 16;
+            this.pctbFotoUsuario.TabStop = false;
+            // 
             // btnCargarFoto
             // 
             this.btnCargarFoto.Location = new System.Drawing.Point(727, 80);
@@ -210,6 +221,16 @@
             this.label13.Size = new System.Drawing.Size(102, 22);
             this.label13.TabIndex = 14;
             this.label13.Text = "Bar Code:";
+            // 
+            // pictureBoxBarcode
+            // 
+            this.pictureBoxBarcode.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.pictureBoxBarcode.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pictureBoxBarcode.Location = new System.Drawing.Point(563, 233);
+            this.pictureBoxBarcode.Name = "pictureBoxBarcode";
+            this.pictureBoxBarcode.Size = new System.Drawing.Size(299, 50);
+            this.pictureBoxBarcode.TabIndex = 13;
+            this.pictureBoxBarcode.TabStop = false;
             // 
             // btnGenerrarBarra
             // 
@@ -293,9 +314,20 @@
             this.panel2.Size = new System.Drawing.Size(963, 253);
             this.panel2.TabIndex = 15;
             // 
+            // pctbVehiculo
+            // 
+            this.pctbVehiculo.BackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.pctbVehiculo.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pctbVehiculo.Location = new System.Drawing.Point(580, 48);
+            this.pctbVehiculo.Name = "pctbVehiculo";
+            this.pctbVehiculo.Size = new System.Drawing.Size(282, 179);
+            this.pctbVehiculo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pctbVehiculo.TabIndex = 17;
+            this.pctbVehiculo.TabStop = false;
+            // 
             // btnCargarFotoVehiculo
             // 
-            this.btnCargarFotoVehiculo.Location = new System.Drawing.Point(823, 108);
+            this.btnCargarFotoVehiculo.Location = new System.Drawing.Point(868, 108);
             this.btnCargarFotoVehiculo.Name = "btnCargarFotoVehiculo";
             this.btnCargarFotoVehiculo.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.btnCargarFotoVehiculo.Size = new System.Drawing.Size(75, 23);
@@ -408,52 +440,20 @@
             this.button1.Text = "Limpiar";
             this.button1.UseVisualStyleBackColor = false;
             // 
-            // pctbFotoUsuario
-            // 
-            this.pctbFotoUsuario.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.pctbFotoUsuario.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pctbFotoUsuario.Location = new System.Drawing.Point(563, 74);
-            this.pctbFotoUsuario.Name = "pctbFotoUsuario";
-            this.pctbFotoUsuario.Size = new System.Drawing.Size(126, 142);
-            this.pctbFotoUsuario.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pctbFotoUsuario.TabIndex = 16;
-            this.pctbFotoUsuario.TabStop = false;
-            // 
-            // pictureBoxBarcode
-            // 
-            this.pictureBoxBarcode.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.pictureBoxBarcode.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pictureBoxBarcode.Location = new System.Drawing.Point(563, 233);
-            this.pictureBoxBarcode.Name = "pictureBoxBarcode";
-            this.pictureBoxBarcode.Size = new System.Drawing.Size(299, 50);
-            this.pictureBoxBarcode.TabIndex = 13;
-            this.pictureBoxBarcode.TabStop = false;
-            // 
-            // pctbVehiculo
-            // 
-            this.pctbVehiculo.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.pctbVehiculo.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pctbVehiculo.Location = new System.Drawing.Point(580, 48);
-            this.pctbVehiculo.Name = "pctbVehiculo";
-            this.pctbVehiculo.Size = new System.Drawing.Size(237, 142);
-            this.pctbVehiculo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pctbVehiculo.TabIndex = 17;
-            this.pctbVehiculo.TabStop = false;
-            // 
-            // Usuarios
+            // UsuariosView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);
-            this.Name = "Usuarios";
+            this.Name = "UsuariosView";
             this.Size = new System.Drawing.Size(1060, 729);
             this.panel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pctbFotoUsuario)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxBarcode)).EndInit();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pctbVehiculo)).EndInit();
             this.ResumeLayout(false);
 
