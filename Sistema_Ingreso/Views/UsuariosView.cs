@@ -234,7 +234,7 @@ namespace Sistema_Ingreso
                     g.Clear(Color.White);
                     g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-                    // Añadir la imagen del usuario
+                    // Añadir la imagen del usuario 
                     if (usuario.Imagen != null)
                     {
                         using (System.Drawing.Image fotoUsuario = System.Drawing.Image.FromStream(new MemoryStream(usuario.Imagen)))

@@ -9,7 +9,8 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using ZXing; // Asegúrate de agregar esta línea para el código de barras
+using ZXing;
+using Sistema_Ingreso.Controller; // Asegúrate de agregar esta línea para el código de barras
 
 namespace Sistema_Ingreso.Views
 {
@@ -18,6 +19,9 @@ namespace Sistema_Ingreso.Views
         private Conexion Conexion;
         private List<Usuario> usuarios; // Guardar la lista de usuarios
         private BindingSource bindingSource; // BindingSource para el DataGridView
+        private UsuarioController usuarioController;
+        private ContextMenuStrip contextMenu;
+
 
         public ListaUsuarios()
         {
@@ -26,6 +30,9 @@ namespace Sistema_Ingreso.Views
             bindingSource = new BindingSource(); // Inicializa el BindingSource
             CargarUsuarios();
             dataGridViewUsuarios.CellContentClick += dataGridViewUsuarios_CellContentClick;
+
+            // Configurar el menú contextual
+            ConfigurarMenuContextual();
         }
 
         private void CargarUsuarios()
@@ -34,84 +41,86 @@ namespace Sistema_Ingreso.Views
 
             try
             {
-                using (MySqlConnection connection = Conexion.ObtenerConexion())
-                {
-                    string query = "SELECT id, documento, nombre, apellido, grado, unidad, imagen FROM Usuarios";
+                  using (MySqlConnection connection = Conexion.ObtenerConexion())
+                  {
+                      string query = "SELECT id, documento, nombre, apellido, grado, unidad, imagen FROM Usuarios";
 
-                    using (MySqlCommand command = new MySqlCommand(query, connection))
-                    {
-                        Conexion.Conectar();
+                      using (MySqlCommand command = new MySqlCommand(query, connection))
+                      {
+                          Conexion.Conectar();
 
-                        using (MySqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                usuarios.Add(new Usuario
-                                {
-                                    Id = reader.GetInt32("id"),
-                                    Documento = reader["documento"].ToString(),
-                                    Nombre = reader["nombre"].ToString(),
-                                    Apellido = reader["apellido"].ToString(),
-                                    Grado = reader["grado"].ToString(),
-                                    Unidad = reader["unidad"].ToString(),
-                                    Imagen = reader["imagen"] as byte[] // Asegúrate de que la imagen se esté cargando correctamente
-                                });
-                            }
-                        }
+                          using (MySqlDataReader reader = command.ExecuteReader())
+                          {
+                              while (reader.Read())
+                              {
+                                  usuarios.Add(new Usuario
+                                  {
+                                      Id = reader.GetInt32("id"),
+                                      Documento = reader["documento"].ToString(),
+                                      Nombre = reader["nombre"].ToString(),
+                                      Apellido = reader["apellido"].ToString(),
+                                      Grado = reader["grado"].ToString(),
+                                      Unidad = reader["unidad"].ToString(),
+                                      Imagen = reader["imagen"] as byte[] // Asegúrate de que la imagen se esté cargando correctamente
+                                  });
+                              }
+                          }
 
-                        Conexion.Cerrar();
-                    }
+                          Conexion.Cerrar();
+                      }
 
-                    // Configura el DataGridView para no generar columnas automáticamente
-                    dataGridViewUsuarios.AutoGenerateColumns = false;
+                      // Configura el DataGridView para no generar columnas automáticamente
+                      dataGridViewUsuarios.AutoGenerateColumns = false;
 
-                    // Limpia cualquier columna existente
-                    dataGridViewUsuarios.Columns.Clear();
+                      // Limpia cualquier columna existente
+                      dataGridViewUsuarios.Columns.Clear();
 
-                    // Define las columnas manualmente
-                    dataGridViewUsuarios.Columns.Add(new DataGridViewTextBoxColumn
-                    {
-                        DataPropertyName = "Id",
-                        HeaderText = "ID"
-                    });
+                      // Define las columnas manualmente
+                      dataGridViewUsuarios.Columns.Add(new DataGridViewTextBoxColumn
+                      {
+                          DataPropertyName = "Id",
+                          HeaderText = "ID"
+                      });
 
-                    dataGridViewUsuarios.Columns.Add(new DataGridViewTextBoxColumn
-                    {
-                        DataPropertyName = "Documento",
-                        HeaderText = "Documento"
-                    });
+                      dataGridViewUsuarios.Columns.Add(new DataGridViewTextBoxColumn
+                      {
+                          DataPropertyName = "Documento",
+                          HeaderText = "Documento"
+                      });
 
-                    dataGridViewUsuarios.Columns.Add(new DataGridViewTextBoxColumn
-                    {
-                        DataPropertyName = "Nombre",
-                        HeaderText = "Nombre"
-                    });
+                      dataGridViewUsuarios.Columns.Add(new DataGridViewTextBoxColumn
+                      {
+                          DataPropertyName = "Nombre",
+                          HeaderText = "Nombre"
+                      });
 
-                    dataGridViewUsuarios.Columns.Add(new DataGridViewTextBoxColumn
-                    {
-                        DataPropertyName = "Apellido",
-                        HeaderText = "Apellido"
-                    });
+                      dataGridViewUsuarios.Columns.Add(new DataGridViewTextBoxColumn
+                      {
+                          DataPropertyName = "Apellido",
+                          HeaderText = "Apellido"
+                      });
 
-                    dataGridViewUsuarios.Columns.Add(new DataGridViewTextBoxColumn
-                    {
-                        DataPropertyName = "Grado",
-                        HeaderText = "Grado"
-                    });
+                      dataGridViewUsuarios.Columns.Add(new DataGridViewTextBoxColumn
+                      {
+                          DataPropertyName = "Grado",
+                          HeaderText = "Grado"
+                      });
 
-                    dataGridViewUsuarios.Columns.Add(new DataGridViewTextBoxColumn
-                    {
-                        DataPropertyName = "Unidad",
-                        HeaderText = "Unidad"
-                    });
+                      dataGridViewUsuarios.Columns.Add(new DataGridViewTextBoxColumn
+                      {
+                          DataPropertyName = "Unidad",
+                          HeaderText = "Unidad"
+                      });
 
-                    // Asignar la lista de usuarios al BindingSource
-                    bindingSource.DataSource = usuarios;
-                    dataGridViewUsuarios.DataSource = bindingSource; // Asigna el BindingSource al DataGridView
+                      // Asignar la lista de usuarios al BindingSource
+                      bindingSource.DataSource = usuarios;
+                      dataGridViewUsuarios.DataSource = bindingSource; // Asigna el BindingSource al DataGridView
 
-                    // Agregar la columna de botones
-                    dataGridViewUsuarios.Columns.Add(CreatePrintButtonColumn());
-                }
+                      // Agregar la columna de botones
+                      dataGridViewUsuarios.Columns.Add(CreatePrintButtonColumn());
+                  }
+               
+              
             }
             catch (MySqlException sqlEx)
             {
@@ -236,5 +245,66 @@ namespace Sistema_Ingreso.Views
             // Asignar la lista filtrada al BindingSource
             bindingSource.DataSource = usuariosFiltrados;
         }
+
+        private void ConfigurarMenuContextual()
+        {
+            // Crear el ContextMenuStrip
+            contextMenu = new ContextMenuStrip();
+
+            // Agregar opciones al menú
+            contextMenu.Items.Add("Editar Usuario", null, EditarUsuario_Click);
+            contextMenu.Items.Add("Eliminar Usuario", null, EliminarUsuario_Click);
+            contextMenu.Items.Add("Exportar Carnet", null, ExportarCarnet_Click);
+
+            // Asociar el evento MouseDown al DataGridView
+            dataGridViewUsuarios.MouseDown += DataGridViewUsuarios_MouseDown;
+        }
+
+        private void EditarUsuario_Click(object sender, EventArgs e)
+        {
+            var usuarioSeleccionado = (Usuario)dataGridViewUsuarios.SelectedRows[0].DataBoundItem;
+            MessageBox.Show($"Editar usuario: {usuarioSeleccionado.Nombre}", "Editar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // Aquí puedes abrir un formulario de edición o realizar otra acción
+        }
+
+        private void DataGridViewUsuarios_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                // Obtener el índice de la celda clickeada
+                var hitTestInfo = dataGridViewUsuarios.HitTest(e.X, e.Y);
+
+                if (hitTestInfo.RowIndex >= 0 && hitTestInfo.ColumnIndex >= 0)
+                {
+                    // Seleccionar la fila correspondiente
+                    dataGridViewUsuarios.ClearSelection();
+                    dataGridViewUsuarios.Rows[hitTestInfo.RowIndex].Selected = true;
+
+                    // Mostrar el menú contextual en la ubicación del cursor
+                    contextMenu.Show(dataGridViewUsuarios, e.Location);
+                }
+            }
+        }
+
+        private void EliminarUsuario_Click(object sender, EventArgs e)
+        {
+            var usuarioSeleccionado = (Usuario)dataGridViewUsuarios.SelectedRows[0].DataBoundItem;
+            var confirmResult = MessageBox.Show($"¿Estás seguro de eliminar al usuario {usuarioSeleccionado.Nombre}?",
+                "Confirmar eliminación", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+
+            if (confirmResult == DialogResult.Yes)
+            {
+                // Lógica para eliminar al usuario
+                usuarios.Remove(usuarioSeleccionado);
+                bindingSource.DataSource = usuarios.ToList();
+            }
+        }
+
+        private void ExportarCarnet_Click(object sender, EventArgs e)
+        {
+            var usuarioSeleccionado = (Usuario)dataGridViewUsuarios.SelectedRows[0].DataBoundItem;
+            GenerarCarnetPNG(usuarioSeleccionado); // Llama a tu método existente
+        }
+
     }
 }
